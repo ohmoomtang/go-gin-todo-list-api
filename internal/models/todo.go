@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"oot.me/todo-list-api/pkg/utils"
+	"oot.me/todo-list-api/utils"
 )
 
 type Todo struct {
