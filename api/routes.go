@@ -11,5 +11,6 @@ func RegisterRoute(server *gin.Engine) {
 	server.POST("/todos",handlers.CreateTodo)
 	server.PUT("/todos/:id",handlers.UpdateTodo)
 	server.DELETE("/todos/:id",handlers.DeleteTodo)
+	server.GET("/todos/:id",handlers.FetchSingleTodo)
 	server.GET("/todos",handlers.FetchTodo)
 }
