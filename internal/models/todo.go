@@ -41,11 +41,17 @@ func (t *Todo) Update() (error){
 	return nil
 }
 
-func FetchTodos(uid int64) ([]Todo,error) {
+func FetchTodos(uid,page,limit int64) ([]Todo,error) {
 	collection := utils.MongoDB.Collection("todo")
 	filter := bson.D{{"userid",uid}}
+
+	skip := int64((page - 1) * int64(limit))
+
+	findOptions := options.Find()
+	findOptions.SetSkip(skip)
+	findOptions.SetLimit(limit)
 	
-	cursor,err := collection.Find(context.TODO(),filter)
+	cursor,err := collection.Find(context.TODO(),filter,findOptions)
 	if err != nil {
 		return []Todo{},err
 	}

@@ -115,11 +115,10 @@ func FetchTodo(ctx *gin.Context){
 		}		
 	}
 	//Hardcode UID first
-	todoList,err = models.FetchTodos(1)
+	todoList,err = models.FetchTodos(1,pageQueryConv,limitQueryConv)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})		
 		return
-	}		
-	//TODO : Logic for pagination, and format data
+	}
 	ctx.JSON(http.StatusOK,gin.H{"data": todoList,"page": pageQueryConv,"limit": limitQueryConv,"total":len(todoList)})
 }
