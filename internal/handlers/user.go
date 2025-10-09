@@ -33,7 +33,7 @@ func RegisterUser(ctx *gin.Context){
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
-	jwtToken,err := utils.SignJWT(newUser.Name,newUser.Email)
+	jwtToken,err := utils.SignJWT(newUser.ID,newUser.Name,newUser.Email)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -63,7 +63,7 @@ func Login(ctx *gin.Context){
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Incorrect Email or Password"})
 		return
 	}
-	token,err := utils.SignJWT(loginUser.Name,loginUser.Email)
+	token,err := utils.SignJWT(foundUser.ID,foundUser.Name,foundUser.Email)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return

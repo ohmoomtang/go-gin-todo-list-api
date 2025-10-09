@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -9,9 +10,10 @@ import (
 
 var key = []byte(config.JWT_KEY)
 
-func SignJWT(name,email string) (string,error) {
+func SignJWT(uid int64,name,email string) (string,error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, 
   		jwt.MapClaims{ 
+			"uid" : uid,
     		"name": name, 
     		"email": email,
 			"exp": time.Now().Add(time.Hour).Unix(),
@@ -23,19 +25,22 @@ func SignJWT(name,email string) (string,error) {
 	return signedToken,nil
 }
 
-func ValidateJWT(token string) ([]string,error) {
+func ValidateJWT(token string) (map[string]string,error) {
 	parsedToken,err := jwt.Parse(token,func(t *jwt.Token) (any, error) {
 		return key,nil
 	}, jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}))
 	if err != nil {
-		return []string{},err
+		return map[string]string{},err
 	}
 	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 	if ok {
-		var claimList []string
-		claimList = append(claimList, claims["name"].(string), claims["email"].(string),claims["exp"].(string))
+		claimList := make(map[string]string)
+		claimList["uid"] = fmt.Sprintf("%f", claims["uid"])
+		claimList["name"] = claims["name"].(string)
+		claimList["email"] = claims["email"].(string)
+		claimList["exp"] = fmt.Sprintf("%f", claims["exp"])
 		return claimList,nil
 	} else {
-		return []string{},err
+		return map[string]string{},err
 	}
 }
